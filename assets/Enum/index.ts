@@ -13,3 +13,10 @@ export enum TILE_TYPE_ENUM {
   CLIFF_RIGHT = 'CLIFF_ROW_END',
   FLOOR = 'FLOOR',
 }
+
+export enum CONTROL_ENUM {
+  'TOP' = 'top',
+  'LEFT' = 'left',
+  'RIGHT' = 'right',
+  'DOWN' = 'down',
+}
