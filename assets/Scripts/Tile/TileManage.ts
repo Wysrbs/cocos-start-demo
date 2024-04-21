@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Sprite, SpriteFrame, UITransform } from 'cc'
-import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/scripts/Tile/TileMapManage'
+import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Scripts/Tile/TileMapManage'
 const { ccclass, property } = _decorator
 
 @ccclass('TileManage')

@@ -1,8 +1,7 @@
 import { _decorator, Component, Node } from 'cc'
-import { TILE_HEIGHT, TILE_WIDTH, TileMapManage } from 'db://assets/scripts/Tile/TileMapManage'
+import { TILE_HEIGHT, TILE_WIDTH, TileMapManage } from 'db://assets/Scripts/Tile/TileMapManage'
 import levels from 'db://assets/Levels'
-import level1 from 'db://assets/Levels/level1'
-import { PlayerManage } from 'db://assets/scripts/Player/PlayerManage'
+import { PlayerManage } from 'db://assets/Scripts/Player/PlayerManage'
 import { createUiNode } from 'db://assets/Utils'
 const { ccclass, property } = _decorator
 
@@ -33,10 +32,3 @@ export class BattleManage extends Component {
     stage.setPosition(-totalX, totalY)
   }
 }
-
-/**
- * 地图居中
- * 按键事件绑定
- * 人物动画
- * 人物移动
- * */

@@ -9,8 +9,9 @@ import {
   SpriteFrame,
   UITransform,
 } from 'cc'
-import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/scripts/Tile/TileMapManage'
+import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Scripts/Tile/TileMapManage'
 import { CONTROL_ENUM } from 'db://assets/Enum'
+import {on} from "../../Runtime/EventManager";
 
 const { ccclass, property } = _decorator
 
@@ -21,39 +22,48 @@ export class PlayerManage extends Component {
   y = 0
   targetX = 0
   targetY = 0
-
+  private readonly sleep = 0.1
   updateXy() {
-    // if (this.targetX != this.x) {
-    //   this.x = this.targetX
-    // }
-    // if (this.targetY != this.y) {
-    //   this.y = this.targetY
-    // }
-    this.node.setPosition(this.x * TILE_WIDTH, this.y * TILE_HEIGHT)
+    if (this.targetX != this.x) {
+      this.x = this.x + this.sleep
+    }
+    if (this.targetY != this.y) {
+      this.y = this.y +　this.sleep
+    }
+    if(this.x > this.targetX) {
+       this.x = this.targetX
+    }
+    if(this.y > this.targetY) {
+      this.y = this.targetY
+    }
+    this.node.setPosition(this.x * TILE_WIDTH + TILE_WIDTH * 2,  this.y * TILE_HEIGHT - TILE_HEIGHT * 2)
   }
   update() {
-    this.move(CONTROL_ENUM.TOP)
     this.updateXy()
+  }
+
+  start(){
+    on('inputDirection', this.move, this)
   }
 
   move(inputDirection: CONTROL_ENUM) {
     if (inputDirection == CONTROL_ENUM.TOP) {
-      // this.targetY = this.x + 1
-      this.x = this.x + 0.01
-      return
-    }
-    if (inputDirection == CONTROL_ENUM.DOWN) {
-      this.targetY = this.x - 1
-      return
-    }
-    if (inputDirection == CONTROL_ENUM.RIGHT) {
       this.targetY = this.y + 1
       return
     }
-    if (inputDirection == CONTROL_ENUM.LEFT) {
+    if (inputDirection == CONTROL_ENUM.DOWN) {
       this.targetY = this.y - 1
       return
     }
+    if (inputDirection == CONTROL_ENUM.RIGHT) {
+      this.targetX = this.x + 1
+      return
+    }
+    if (inputDirection == CONTROL_ENUM.LEFT) {
+      this.targetX = this.x - 1
+      return
+    }
+
   }
 
   async init() {
