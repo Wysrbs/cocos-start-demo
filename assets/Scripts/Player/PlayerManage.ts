@@ -1,17 +1,8 @@
-import {
-  _decorator,
-  animation,
-  Animation,
-  AnimationClip,
-  Component,
-  resources,
-  Sprite,
-  SpriteFrame,
-  UITransform,
-} from 'cc'
+import { _decorator, Component, resources, SpriteFrame } from 'cc'
 import { TILE_HEIGHT, TILE_WIDTH } from 'db://assets/Scripts/Tile/TileMapManage'
-import { CONTROL_ENUM } from 'db://assets/Enum'
-import {on} from "../../Runtime/EventManager";
+import { CONTROL_ENUM, PARAMS_NAME_ENUM } from 'db://assets/Enum'
+import { on } from '../../Runtime/EventManager'
+import { PlayerStateMachine } from 'db://assets/Scripts/Player/PlayerStateMachine'
 
 const { ccclass, property } = _decorator
 
@@ -23,26 +14,27 @@ export class PlayerManage extends Component {
   targetX = 0
   targetY = 0
   private readonly sleep = 0.1
+  fsm: PlayerStateMachine = null
   updateXy() {
     if (this.targetX != this.x) {
       this.x = this.x + this.sleep
     }
     if (this.targetY != this.y) {
-      this.y = this.y +　this.sleep
+      this.y = this.y + this.sleep
     }
-    if(this.x > this.targetX) {
-       this.x = this.targetX
+    if (this.x > this.targetX) {
+      this.x = this.targetX
     }
-    if(this.y > this.targetY) {
+    if (this.y > this.targetY) {
       this.y = this.targetY
     }
-    this.node.setPosition(this.x * TILE_WIDTH + TILE_WIDTH * 2,  this.y * TILE_HEIGHT - TILE_HEIGHT * 2)
+    this.node.setPosition(this.x * TILE_WIDTH + TILE_WIDTH * 2, this.y * TILE_HEIGHT - TILE_HEIGHT * 2)
   }
   update() {
     this.updateXy()
   }
 
-  start(){
+  start() {
     on('inputDirection', this.move, this)
   }
 
@@ -64,30 +56,17 @@ export class PlayerManage extends Component {
       return
     }
 
+    if (inputDirection == CONTROL_ENUM.TURNLEFT) {
+      this.fsm.setParams(PARAMS_NAME_ENUM.TURNLEFT, true)
+    }
   }
 
   async init() {
-    const sprite = this.addComponent(Sprite)
-    sprite.sizeMode = Sprite.SizeMode.CUSTOM
-
-    const transform = sprite.addComponent(UITransform)
-    transform.setContentSize(TILE_WIDTH * 4, TILE_HEIGHT * 4)
-
-    const spriteFrames = await this.loadDir()
-    const animationComponent = this.addComponent(Animation)
-
-    const animationClip = new AnimationClip()
-    const track = new animation.ObjectTrack()
-    track.path = new animation.TrackPath().toComponent(Sprite).toProperty('spriteFrame') // 指定轨道路径，即指定目标对象为 "Foo" 子节点的 "position" 属性
-    const frames: Array<[number, SpriteFrame]> = spriteFrames.map((item, index) => [TIME * index, item])
-    track.channel.curve.assignSorted(frames) // x, y, z 是前三条通道
-    // 最后将轨道添加到动画剪辑以应用
-    animationClip.addTrack(track)
-
-    animationClip.wrapMode = AnimationClip.WrapMode.Loop
-    animationClip.duration = frames.length * TIME
-    animationComponent.defaultClip = animationClip
-    animationComponent.play()
+    this.fsm = this.addComponent(PlayerStateMachine)
+    this.fsm.init()
+    setTimeout(() => {
+      this.fsm.setParams(PARAMS_NAME_ENUM.IDLE, true)
+    }, 1000)
   }
 
   loadDir(): Promise<SpriteFrame[]> {

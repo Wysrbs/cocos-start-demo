@@ -19,4 +19,15 @@ export enum CONTROL_ENUM {
   'LEFT' = 'LEFT',
   'RIGHT' = 'RIGHT',
   'DOWN' = 'DOWN',
+  'TURNLEFT' = 'TURNLEFT',
+}
+
+export enum FSM_PARAMS_TYPE_ENUM {
+  TRIGGER = 'TRIGGER',
+  NUMBER = 'NUMBER',
+}
+
+export enum PARAMS_NAME_ENUM {
+  IDLE = 'IDLE',
+  TURNLEFT = 'TURNLEFT',
 }
